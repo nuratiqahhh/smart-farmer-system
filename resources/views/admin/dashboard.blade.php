@@ -21,8 +21,8 @@
         <ul class="space-y-4">
             <li><a href="{{ route('admin.dashboard') }}" class="block hover:bg-green-700 p-2 rounded">Dashboard</a></li>
             <li><a href="{{ route('admin.products') }}" class="block hover:bg-green-700 p-2 rounded">Products</a></li>
-            <li><a href="{{ route('orders.index') }}" class="block hover:bg-green-700 p-2 rounded">Orders</a></li>
-            <li><a href="#" class="block hover:bg-green-700 p-2 rounded">Users</a></li>
+            <li><a href="{{ route('admin.orders') }}" class="block hover:bg-green-700 p-2 rounded">Orders</a></li>
+            <li><a href="{{ route('admin.users') }}" class="block hover:bg-green-700 p-2 rounded">Users</a></li>
 
             <li class="mt-10">
                 <form method="POST" action="{{ route('logout') }}">

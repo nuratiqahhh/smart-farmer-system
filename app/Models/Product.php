@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Product extends Model
 {
@@ -14,6 +15,7 @@ class Product extends Model
         'unit',
         'price',
         'image',
+        'grade',
         'user_id',
 
     ];

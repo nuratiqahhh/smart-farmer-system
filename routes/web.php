@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
@@ -24,7 +26,23 @@ Route::get('/', function () {
 */
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+
+        return redirect('/admin/dashboard');
+
+    }
+
+    if ($user->role === 'farmer') {
+
+        return redirect('/farmer/dashboard');
+
+    }
+
+    return redirect('/shop');
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 /*
@@ -39,19 +57,14 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-});
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN PRODUCTS
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth'])->group(function () {
-
     Route::get('/admin/products', [ProductController::class, 'adminIndex'])
         ->name('admin.products');
 
+    Route::get('/admin/orders', [OrderController::class, 'adminOrders'])
+    ->name('admin.orders');
+
+    Route::get('/admin/users', [UserController::class, 'index'])
+    ->name('admin.users');
 });
 
 /*
@@ -62,9 +75,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/farmer/dashboard', function () {
-        return view('farmer.dashboard');
-    })->name('farmer.dashboard');
+    Route::get('/farmer/dashboard',
+        [FarmerController::class, 'dashboard'])
+        ->name('farmer.dashboard');
 
 });
 
@@ -84,13 +97,13 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| PRODUCTS
+| FARMER PRODUCTS
 |--------------------------------------------------------------------------
 */
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::resource('products', ProductController::class);
+    Route::resource('farmer-products', ProductController::class);
 
 });
 
@@ -160,17 +173,18 @@ Route::get('/payment-success', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    // Farmer View Orders
     Route::get('/orders', [OrderController::class, 'index'])
         ->name('orders.index');
 
-    // Customer Order History
-    Route::get('/my-orders', [OrderController::class, 'history'])
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])
         ->name('orders.history');
 
-    // Buy Product
     Route::post('/buy/{id}', [OrderController::class, 'buy'])
         ->name('orders.buy');
+
+    Route::put('/orders/{id}/complete',
+        [OrderController::class, 'complete'])
+        ->name('orders.complete');
 
 });
 

@@ -14,10 +14,24 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with(['product', 'buyer'])
+            ->whereHas('product', function ($query) {
+
+                $query->where('user_id', auth()->id());
+
+            })
             ->latest()
             ->get();
 
         return view('orders.index', compact('orders'));
+    }
+
+    public function adminOrders()
+    {
+        $orders = Order::with(['product', 'buyer'])
+            ->latest()
+            ->get();
+
+        return view('admin.orders', compact('orders'));
     }
 
     /**
@@ -75,6 +89,8 @@ class OrderController extends Controller
 
             'total_price' => $total,
 
+            'status' => 'Paid',
+
         ]);
 
         // reduce stock
@@ -85,5 +101,21 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Order placed successfully!');
+    }
+
+    /**
+     * COMPLETE ORDER
+     */
+    public function complete($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->status = 'Completed';
+
+        $order->save();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Order marked as completed!');
     }
 }

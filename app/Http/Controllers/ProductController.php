@@ -12,7 +12,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('user_id', auth()->id())->get();
+        $products = Product::where('user_id', auth()->id())
+            ->latest()
+            ->get();
 
         return view('products.index', compact('products'));
     }
@@ -34,6 +36,7 @@ class ProductController extends Controller
 
             'name' => 'required',
             'category' => 'required',
+            'grade' => 'required',
             'quantity' => 'required',
             'unit' => 'required',
             'price' => 'required',
@@ -51,6 +54,7 @@ class ProductController extends Controller
 
             'name' => $request->name,
             'category' => $request->category,
+            'grade' => $request->grade,
             'quantity' => $request->quantity,
             'unit' => $request->unit,
             'price' => $request->price,
@@ -59,7 +63,7 @@ class ProductController extends Controller
 
         ]);
 
-        return redirect()->route('products.index')
+        return redirect()->route('farmer-products.index')
             ->with('success', 'Product added successfully!');
     }
 
@@ -72,7 +76,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')
+        return redirect()->route('farmer-products.index')
             ->with('success', 'Product deleted successfully!');
     }
 
@@ -91,19 +95,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+
+            'name' => 'required',
+            'category' => 'required',
+            'grade' => 'required',
+            'quantity' => 'required',
+            'unit' => 'required',
+            'price' => 'required',
+
+        ]);
+
         $product = Product::findOrFail($id);
 
+        // update image if new image uploaded
+        if ($request->hasFile('image')) {
+
+            $imageName = time() . '.' . $request->image->extension();
+
+            $request->image->move(public_path('products'), $imageName);
+
+            $product->image = $imageName;
+        }
+
+        // update product
         $product->update([
 
             'name' => $request->name,
             'category' => $request->category,
+            'grade' => $request->grade,
             'quantity' => $request->quantity,
             'unit' => $request->unit,
             'price' => $request->price,
 
         ]);
 
-        return redirect()->route('products.index')
+        return redirect()->route('farmer-products.index')
             ->with('success', 'Product updated successfully!');
     }
 
@@ -112,7 +139,7 @@ class ProductController extends Controller
      */
     public function adminIndex()
     {
-        $products = Product::all();
+        $products = Product::latest()->get();
 
         return view('admin.products', compact('products'));
     }
@@ -124,19 +151,37 @@ class ProductController extends Controller
     {
         $search = $request->search;
 
+        /*
+        |--------------------------------------------------------------------------
+        | FIFO PRODUCT DISPLAY
+        |--------------------------------------------------------------------------
+        | Product sama akan ikut stock farmer yang upload dulu
+        | sebab order ikut created_at oldest first
+        |--------------------------------------------------------------------------
+        */
+
         $products = Product::query()
 
             ->when($search, function ($query, $search) {
 
                 $query->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('category', 'like', '%' . $search . '%');
+                      ->orWhere('category', 'like', '%' . $search . '%')
+                      ->orWhere('grade', 'like', '%' . $search . '%');
 
             })
 
-            ->latest()
+            ->orderBy('created_at', 'asc')
 
             ->get();
 
-        return view('shop.index', compact('products'));
+            $cartCount = 0;
+
+if (auth()->check()) {
+
+    $cartCount = \App\Models\Cart::where('user_id', auth()->id())
+    ->count();
+}
+
+        return view('shop.index', compact('products', 'cartCount'));
     }
 }

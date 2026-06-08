@@ -9,9 +9,13 @@ use App\Models\Product;
 class CartController extends Controller
 {
     // 🔥 ADD TO CART
-    public function add($id)
+    public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
 
         $cart = Cart::where('user_id', auth()->id())
                     ->where('product_id', $id)
@@ -19,7 +23,7 @@ class CartController extends Controller
 
         if ($cart) {
 
-            $cart->quantity += 1;
+            $cart->quantity += $request->quantity;
             $cart->save();
 
         } else {
@@ -27,7 +31,7 @@ class CartController extends Controller
             Cart::create([
                 'user_id' => auth()->id(),
                 'product_id' => $id,
-                'quantity' => 1,
+                'quantity' => $request->quantity,
             ]);
         }
 

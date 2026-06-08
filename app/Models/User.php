@@ -12,20 +12,28 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * 🔥 IMPORTANT: tambah role kat sini
+     * Mass Assignable Attributes
      */
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'address',
         'password',
-        'role', // ✅ FIX
+        'role',
     ];
 
+    /**
+     * Hidden Attributes
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * Attribute Casting
+     */
     protected function casts(): array
     {
         return [

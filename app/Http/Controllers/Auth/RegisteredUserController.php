@@ -59,6 +59,11 @@ class RegisteredUserController extends Controller
                 'required'
             ],
 
+            'phone' => [
+                'required',
+                'regex:/^[0-9]{10,11}$/'
+            ],
+
         ]);
 
         // ✅ CREATE USER
@@ -68,11 +73,11 @@ class RegisteredUserController extends Controller
 
             'email' => $request->email,
 
+            'phone' => $request->phone,
+
             'password' => Hash::make($request->password),
 
-            // ✅ SAVE ROLE
             'role' => $request->role,
-
         ]);
 
         event(new Registered($user));

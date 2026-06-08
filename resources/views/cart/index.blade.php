@@ -43,7 +43,10 @@
     <!-- CART ITEMS -->
     @if($carts->count() > 0)
 
-        <div class="space-y-5">
+        <div class="grid lg:grid-cols-3 gap-8">
+
+            <!-- LEFT SIDE -->
+            <div class="lg:col-span-2 space-y-5">
 
             @foreach($carts as $item)
 
@@ -55,30 +58,52 @@
                 <div class="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
 
                     <!-- PRODUCT INFO -->
-                    <div>
+                    <div class="flex items-center gap-5">
 
-                        <h2 class="text-2xl font-bold text-gray-800 mb-1">
+                        <img src="{{ asset('products/' . $item->product->image) }}"
+                            class="w-24 h-24 object-cover rounded-2xl shadow">
 
-                            {{ $item->product->name }}
+                        <div>
 
-                        </h2>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-1">
 
-                        <p class="text-gray-500">
+                                {{ $item->product->name }}
 
-                            Quantity:
-                            <span class="font-semibold">
-                                {{ $item->quantity }}
-                            </span>
+                            </h2>
 
-                        </p>
+                            <div class="flex gap-2 mt-2">
 
-                        <p class="text-green-600 font-bold text-xl mt-3">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
 
-                            RM {{ number_format($subtotal, 2) }}
+                                    Grade {{ $item->product->grade }}
 
-                        </p>
+                                </span>
+
+                            </div>
+
+                            <p class="text-gray-500 mt-2">
+
+                                Quantity:
+                                <span class="font-semibold">
+
+                                    {{ $item->quantity }}
+
+                                    {{ $item->product->unit }}
+
+                                </span>
+
+                            </p>
+                            
+                            <p class="text-green-600 font-bold text-xl mt-3">
+
+                                RM {{ number_format($subtotal, 2) }}
+
+                            </p>
+
+                        </div>
 
                     </div>
+
 
                     <!-- REMOVE BUTTON -->
                     <form action="{{ route('cart.remove', $item->id) }}"
@@ -101,22 +126,73 @@
 
         </div>
 
-        <!-- TOTAL SECTION -->
-        <div class="bg-white mt-8 p-6 rounded-2xl shadow">
+        <!-- RIGHT SIDE -->
+        <div>
 
-            <div class="flex justify-between items-center mb-6">
+        <!-- ORDER SUMMARY -->
+        <div class="bg-white p-6 rounded-2xl shadow sticky top-24">
 
-                <h2 class="text-2xl font-bold text-gray-800">
-                    Total
-                </h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
 
-                <span class="text-3xl font-bold text-green-600">
+                📋 Order Summary
 
-                    RM {{ number_format($grandTotal, 2) }}
+            </h2>
 
-                </span>
+            <div class="space-y-4">
 
-            </div>
+                <div class="flex justify-between">
+
+                    <span class="text-gray-600">
+                        Products
+                    </span>
+
+                    <span class="font-semibold">
+                        {{ $carts->count() }}
+                    </span>
+
+                </div>
+
+                <div class="flex justify-between">
+
+                    <span class="text-gray-600">
+                        Total Units
+                    </span>
+
+                    <span class="font-semibold">
+                        {{ $carts->sum('quantity') }}
+                    </span>
+
+                </div>
+
+                <div class="flex justify-between">
+
+                    <span class="text-gray-600">
+                        Subtotal
+                    </span>
+
+                    <span class="font-semibold">
+
+                        RM {{ number_format($grandTotal, 2) }}
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="flex justify-between items-center">
+
+                    <span class="text-lg font-bold">
+                        Grand Total
+                    </span>
+
+                    <span class="text-3xl font-bold text-green-600">
+
+                        RM {{ number_format($grandTotal, 2) }}
+
+                    </span>
+
+                </div>
 
             <!-- CHECKOUT BUTTON -->
             <a href="{{ route('checkout.index') }}"

@@ -38,10 +38,33 @@ class CheckoutController extends Controller
         // validation
         $request->validate([
 
-            'fullname' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
+            'fullname' => 'required|min:3|max:100',
+
+            'phone' => [
+                'required',
+                'regex:/^[0-9]{10,11}$/'
+            ],
+
+            'address' => 'required|min:10|max:255',
+
             'payment_method' => 'required',
+
+            'delivery_method' => 'required',
+
+        ], [
+
+            'fullname.required' => 'Full name is required.',
+            'fullname.min' => 'Full name must be at least 3 characters.',
+
+            'phone.required' => 'Phone number is required.',
+            'phone.regex' => 'Phone number must contain 10 or 11 digits.',
+
+            'address.required' => 'Address is required.',
+            'address.min' => 'Address must be at least 10 characters.',
+
+            'payment_method.required' => 'Please select a payment method.',
+
+            'delivery_method.required' => 'Please select a delivery method.',
 
         ]);
 
@@ -77,7 +100,20 @@ class CheckoutController extends Controller
                     'total_price' =>
                         $cart->product->price * $cart->quantity,
 
+                    'status' => 'Paid',
+
+                    'delivery_method' => $request->delivery_method,
+
+                    'fullname' => $request->fullname,
+
+                    'phone' => $request->phone,
+
+                    'address' => $request->address,
+
+                    'payment_method' => $request->payment_method,
+
                 ]);
+
             }
 
         }

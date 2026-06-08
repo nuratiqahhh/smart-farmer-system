@@ -51,6 +51,12 @@
                    placeholder="Email"
                    class="w-full mb-4 p-3 rounded text-black">
 
+            <!-- Phone -->
+            <input type="text"
+                   name="phone"
+                   placeholder="Phone Number"
+                   class="w-full mb-4 p-3 rounded text-black">
+
             <!-- Password -->
             <input type="password"
                    name="password"

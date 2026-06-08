@@ -20,25 +20,93 @@
 
         <!-- FULL NAME -->
         <input type="text"
-               name="fullname"
-               placeholder="Full Name"
-               class="w-full border border-gray-300 p-4 rounded-lg mb-5 focus:outline-none focus:ring-2 focus:ring-green-500"
-               required>
+            name="fullname"
+            value="{{ old('fullname', auth()->user()->name) }}"
+            placeholder="Full Name"
+            class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required>
+
+        @error('fullname')
+            <p class="text-red-500 text-sm mb-5 mt-1">
+                {{ $message }}
+            </p>
+        @enderror
 
         <!-- PHONE -->
         <input type="text"
-               name="phone"
-               placeholder="Phone Number"
-               class="w-full border border-gray-300 p-4 rounded-lg mb-5 focus:outline-none focus:ring-2 focus:ring-green-500"
-               required>
+            name="phone"
+            value="{{ old('phone') }}"
+            placeholder="Phone Number"
+            class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required>
+
+        @error('phone')
+            <p class="text-red-500 text-sm mb-5 mt-1">
+                {{ $message }}
+            </p>
+        @enderror
 
         <!-- ADDRESS -->
         <textarea
             name="address"
             placeholder="Address"
             rows="4"
-            class="w-full border border-gray-300 p-4 rounded-lg mb-5 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required></textarea>
+            class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required>{{ old('address') }}</textarea>
+
+        @error('address')
+            <p class="text-red-500 text-sm mb-5 mt-1">
+                {{ $message }}
+            </p>
+        @enderror
+
+        <!-- DELIVERY METHOD -->
+        <label class="block text-gray-700 font-semibold mb-2">
+
+            Delivery Method
+
+        </label>
+
+        <div class="mb-6">
+
+            <label class="flex items-center gap-3 mb-3">
+
+                <input
+                type="radio"
+                name="delivery_method"
+                value="pickup"
+                checked>
+
+                <span>
+
+                    Self Pickup
+                    <span class="text-green-600 text-sm">
+                        (Free)
+                    </span>
+
+                </span>
+
+            </label>
+
+            <label class="flex items-center gap-3">
+
+                <input
+                type="radio"
+                name="delivery_method"
+                value="delivery">
+
+                <span>
+
+                    Home Delivery
+                    <span class="text-gray-500 text-sm">
+                        (RM5 Delivery Fee)
+                    </span>
+
+                </span>
+
+            </label>
+
+        </div>    
 
         <!-- PAYMENT METHOD -->
         <select

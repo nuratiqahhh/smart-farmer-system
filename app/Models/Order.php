@@ -13,6 +13,14 @@ class Order extends Model
         'quantity',
         'total_price',
 
+        'status',
+        'delivery_method',
+
+        'fullname',
+        'phone',
+        'address',
+        'payment_method',
+
     ];
 
     /**
