@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HarvestRecordController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/users', [UserController::class, 'index'])
     ->name('admin.users');
+
+    Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])
+    ->name('admin.users.delete');
 });
 
 /*
@@ -104,6 +109,36 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::resource('farmer-products', ProductController::class);
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| HARVEST RECORDS
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::resource(
+        'harvest-records',
+        HarvestRecordController::class
+    );
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| REPORTS
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get(
+        '/reports',
+        [ReportController::class, 'index']
+    )->name('reports.index');
 
 });
 

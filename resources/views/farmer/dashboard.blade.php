@@ -35,15 +35,31 @@
             <!-- Products -->
             <li>
                 <a href="{{ route('farmer-products.index') }}"
-                   class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
                     My Products
+                </a>
+            </li>
+
+            <!-- Harvest Records -->
+            <li>
+                <a href="{{ route('harvest-records.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                    Harvest Records
+                </a>
+            </li>
+
+            <!-- Reports -->
+            <li>
+                <a href="{{ route('reports.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                    Reports
                 </a>
             </li>
 
             <!-- Orders -->
             <li>
                 <a href="{{ route('orders.index') }}"
-                   class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
                     Customer Orders
                 </a>
             </li>
@@ -118,7 +134,7 @@
                 </p>
             </div>
 
-            <!-- Orders -->
+            <!-- Customer Orders -->
             <div class="bg-white rounded-3xl shadow-lg p-6 border-l-8 border-blue-500">
                 <h3 class="text-gray-500 font-semibold mb-3">
                     Customer Orders
@@ -217,7 +233,7 @@
                     </h2>
 
                     <h3 class="text-4xl font-extrabold text-green-600">
-                        kangkung
+                        {{ $topProductName }}
                     </h3>
 
                     <p class="text-gray-500 mt-2 text-lg">
@@ -226,7 +242,7 @@
                 </div>
 
                 <div class="bg-green-100 text-green-700 px-6 py-3 rounded-full font-bold">
-                    1 sold
+                    {{ $topProductSold }} sold
                 </div>
 
             </div>
@@ -255,6 +271,62 @@
                     <p class="text-gray-500 text-lg">
                         Some products need restocking soon.
                     </p>
+
+                    <div class="mt-8 w-full max-w-3xl">
+
+                        <table class="w-full bg-white rounded-xl overflow-hidden">
+
+                            <thead class="bg-red-500 text-white">
+
+                                <tr>
+                                    <th class="p-3 text-left">Product</th>
+                                    <th class="p-3 text-left">Stock</th>
+                                    <th class="p-3 text-left">Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            @foreach($lowStockProducts as $product)
+
+                                <tr class="border-b">
+
+                                    <td class="p-3">
+                                        {{ $product->name }}
+                                    </td>
+
+                                    <td class="p-3">
+                                        {{ $product->quantity }}
+                                    </td>
+
+                                    <td class="p-3">
+
+                                        @if($product->quantity <= 2)
+
+                                            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full">
+                                                Critical
+                                            </span>
+
+                                        @else
+
+                                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                                                Low Stock
+                                            </span>
+
+                                        @endif
+
+                                    </td>
+
+                                </tr>
+
+                            @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
@@ -293,8 +365,8 @@ new Chart(ctx, {
     data: {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         datasets: [{
-            label: 'Sales',
-            data: [12, 19, 8, 15, 10, 20, 18],
+        label: 'Sales (RM)',
+        data: @json($salesData),
             backgroundColor: [
                 '#16a34a',
                 '#22c55e',

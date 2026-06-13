@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Payment;
 
 class CheckoutController extends Controller
 {
@@ -19,15 +20,27 @@ class CheckoutController extends Controller
             ->get();
 
         // calculate total
-        $total = 0;
+        $subtotal = 0;
 
         foreach ($carts as $cart) {
 
-            $total += $cart->product->price * $cart->quantity;
+            $subtotal += $cart->product->price * $cart->quantity;
 
         }
 
-        return view('checkout.index', compact('carts', 'total'));
+        $serviceCharge = 1.00;
+
+        $total = $subtotal + $serviceCharge;
+
+        return view(
+            'checkout.index',
+            compact(
+                'carts',
+                'subtotal',
+                'serviceCharge',
+                'total'
+            )
+        );
     }
 
     /**
@@ -89,7 +102,21 @@ class CheckoutController extends Controller
                 $product->save();
 
                 // SAVE ORDER
-                Order::create([
+                $productTotal =
+                    $cart->product->price * $cart->quantity;
+
+                $deliveryFee =
+                    $request->delivery_method == 'delivery'
+                        ? 5
+                        : 0;
+
+                $serviceCharge = 1;
+
+                $finalTotal =
+                    $productTotal +
+                    $deliveryFee +
+                    $serviceCharge;
+                $order = Order::create([
 
                     'buyer_id' => auth()->id(),
 
@@ -97,8 +124,7 @@ class CheckoutController extends Controller
 
                     'quantity' => $cart->quantity,
 
-                    'total_price' =>
-                        $cart->product->price * $cart->quantity,
+                    'total_price' => $finalTotal,
 
                     'status' => 'Paid',
 
@@ -111,6 +137,20 @@ class CheckoutController extends Controller
                     'address' => $request->address,
 
                     'payment_method' => $request->payment_method,
+
+                ]);
+
+                Payment::create([
+
+                    'order_id' => $order->id,
+
+                    'amount' => $order->total_price,
+
+                    'payment_method' => $request->payment_method,
+
+                    'payment_status' => 'Paid',
+
+                    'payment_date' => now(),
 
                 ]);
 

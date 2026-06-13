@@ -38,4 +38,12 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'buyer_id');
     }
+
+    /**
+     * PAYMENT RELATION
+     */
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
 }

@@ -10,47 +10,68 @@
 <div class="flex min-h-screen">
 
     <!-- Sidebar -->
-    <div class="w-64 bg-green-800 text-white p-6">
+    <div class="w-64 bg-green-900 text-white p-6 fixed top-0 left-0 h-screen shadow-2xl z-50 overflow-y-auto">
 
-        <h2 class="text-2xl font-bold mb-8">
-            🌾 Farmer Panel
-        </h2>
+        <div class="mb-10">
+            <h1 class="text-3xl font-extrabold">
+                🌾 Farmer Panel
+            </h1>
+        </div>
 
         <ul class="space-y-4">
 
             <li>
                 <a href="{{ route('farmer.dashboard') }}"
-                   class="block hover:bg-green-700 p-2 rounded">
+                   class="block hover:bg-green-700 px-4 py-3 rounded-2xl">
                     Dashboard
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('farmer-products.index') }}"
-                    class="block hover:bg-green-700 p-2 rounded">
+                    class="block hover:bg-green-700 px-4 py-3 rounded-2xl">
                         My Products
                     </a>
             </li>
 
             <li>
+                <a href="{{ route('harvest-records.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl">
+
+                    Harvest Records
+
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('reports.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl">
+
+                    Reports
+
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('orders.index') }}"
-                   class="block bg-green-700 p-2 rounded">
+                   class="block bg-green-700 px-4 py-3 rounded-2xl">
                     Customer Orders
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('profile.edit') }}"
-                   class="block hover:bg-green-700 p-2 rounded">
+                   class="block hover:bg-green-700 px-4 py-3 rounded-2xl">
                     Profile
                 </a>
             </li>
 
-            <li class="mt-10">
+            <li class="pt-8">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <button class="w-full text-left hover:bg-red-600 p-2 rounded">
+                    <button
+                        class="w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded-2xl text-left font-semibold">
                         Logout
                     </button>
                 </form>
@@ -61,30 +82,30 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-8">
+    <div class="flex-1 ml-64 p-10">
 
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
 
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">
+                <h1 class="text-5xl font-extrabold text-gray-900">
                     Customer Orders
                 </h1>
 
-                <p class="text-gray-500">
+                <p class="text-gray-500 text-lg mt-2">
                     Manage customer purchases and orders here.
                 </p>
             </div>
 
             <a href="{{ route('farmer.dashboard') }}"
-               class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
+               class="bg-gray-300 hover:bg-gray-400 px-6 py-3 rounded-2xl font-semibold">
                 ← Back
             </a>
 
         </div>
 
         <!-- Orders Table -->
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
 
             <table class="w-full">
 
@@ -220,7 +241,7 @@
 
                         <tr>
 
-                            <td colspan="5" class="p-6 text-center text-gray-500">
+                            <td colspan="9" class="p-6 text-center text-gray-500">
 
                                 No customer orders yet.
 

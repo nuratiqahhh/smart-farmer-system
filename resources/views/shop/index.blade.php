@@ -237,7 +237,7 @@
 
                     <p class="text-gray-600 text-lg">
 
-                        Stock:
+                        Available Stock:
                         <span class="font-bold text-gray-800">
 
                             {{ $product->quantity }}
@@ -287,7 +287,7 @@
 
                     <span class="text-gray-500 font-medium">
 
-                        / {{ $product->unit }}
+                        per {{ $product->unit }}
 
                     </span>
 
@@ -306,17 +306,34 @@
 
                     </label>
 
-                    <p class="text-xs text-gray-500 mb-3">
+                    <p class="text-xs text-gray-500 mb-2">
 
                         @if($product->unit == 'kg')
+
                             Sold by Weight
+
                         @elseif($product->unit == 'bundle')
+
                             Sold per Bundle
+
                         @else
+
                             Sold per Item
+
                         @endif
 
                     </p>
+
+                    @if($product->unit == 'kg')
+
+                        <p class="text-xs text-green-600 mb-3">
+
+                            Example:
+                            2 kg = RM {{ number_format($product->price * 2, 2) }}
+
+                        </p>
+
+                    @endif
 
                     <input type="number"
                         name="quantity"

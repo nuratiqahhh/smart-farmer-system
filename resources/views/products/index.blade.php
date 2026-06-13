@@ -44,6 +44,23 @@
             </li>
 
             <!-- Orders -->
+             <li>
+                <a href="{{ route('harvest-records.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition font-medium">
+
+                    Harvest Records
+
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('reports.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition font-medium">
+
+                    Reports
+
+                </a>
+            </li>
             <li>
                 <a href="{{ route('orders.index') }}"
                    class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition font-medium">

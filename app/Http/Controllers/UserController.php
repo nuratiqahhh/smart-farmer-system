@@ -16,4 +16,26 @@ class UserController extends Controller
 
         return view('admin.users', compact('users'));
     }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // prevent deleting yourself
+        if ($user->id == auth()->id()) {
+
+            return back()->with(
+                'error',
+                'You cannot delete your own account.'
+            );
+
+        }
+
+        $user->delete();
+
+        return back()->with(
+            'success',
+            'User deleted successfully.'
+        );
+    }
 }

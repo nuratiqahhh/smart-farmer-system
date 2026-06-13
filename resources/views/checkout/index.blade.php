@@ -145,15 +145,51 @@
 
             <hr class="my-5">
 
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between mb-2">
 
-                <span class="text-2xl font-bold text-gray-800">
+                <span>Subtotal</span>
+
+                <span>
+                    RM {{ number_format($subtotal,2) }}
+                </span>
+
+            </div>
+
+            <div class="flex justify-between mb-2">
+
+                <span>Delivery Fee</span>
+
+                <span id="deliveryFee">
+
+                    RM 0.00
+
+                </span>
+
+            </div>
+
+            <div class="flex justify-between mb-2">
+
+                <span>System Service Charge</span>
+
+                <span>
+                    RM {{ number_format($serviceCharge,2) }}
+                </span>
+
+            </div>
+
+            <hr class="my-4">
+
+            <div class="flex justify-between">
+
+                <span class="text-2xl font-bold">
                     Total
                 </span>
 
-                <span class="text-3xl font-bold text-green-600">
+                <span
+                    id="grandTotal"
+                    class="text-3xl font-bold text-green-600">
 
-                    RM {{ number_format($total, 2) }}
+                    RM {{ number_format($total,2) }}
 
                 </span>
 
@@ -185,6 +221,59 @@
     </form>
 
 </div>
+
+<script>
+
+const pickupRadio =
+document.querySelector('input[value="pickup"]');
+
+const deliveryRadio =
+document.querySelector('input[value="delivery"]');
+
+const deliveryFeeText =
+document.getElementById('deliveryFee');
+
+const grandTotalText =
+document.getElementById('grandTotal');
+
+const subtotal = {{ $subtotal }};
+const serviceCharge = {{ $serviceCharge }};
+
+function updateTotal() {
+
+    let deliveryFee = 0;
+
+    if (deliveryRadio.checked) {
+
+        deliveryFee = 5;
+
+    }
+
+    let total =
+        subtotal +
+        serviceCharge +
+        deliveryFee;
+
+    deliveryFeeText.innerHTML =
+        'RM ' + deliveryFee.toFixed(2);
+
+    grandTotalText.innerHTML =
+        'RM ' + total.toFixed(2);
+}
+
+pickupRadio.addEventListener(
+    'change',
+    updateTotal
+);
+
+deliveryRadio.addEventListener(
+    'change',
+    updateTotal
+);
+
+updateTotal();
+
+</script>
 
 </body>
 </html>
