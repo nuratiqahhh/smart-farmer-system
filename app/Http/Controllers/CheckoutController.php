@@ -58,7 +58,7 @@ class CheckoutController extends Controller
                 'regex:/^[0-9]{10,11}$/'
             ],
 
-            'address' => 'required|min:10|max:255',
+            'address' => 'required_if:delivery_method,delivery|min:10|max:255',
 
             'payment_method' => 'required',
 
@@ -72,7 +72,7 @@ class CheckoutController extends Controller
             'phone.required' => 'Phone number is required.',
             'phone.regex' => 'Phone number must contain 10 or 11 digits.',
 
-            'address.required' => 'Address is required.',
+            'address.required_if' => 'Address is required for home delivery.',
             'address.min' => 'Address must be at least 10 characters.',
 
             'payment_method.required' => 'Please select a payment method.',
@@ -153,6 +153,16 @@ class CheckoutController extends Controller
                     'payment_date' => now(),
 
                 ]);
+
+                if($request->delivery_method == 'delivery'){
+
+                    auth()->user()->update([
+
+                        'address' => $request->address
+
+                    ]);
+
+                }
 
             }
 

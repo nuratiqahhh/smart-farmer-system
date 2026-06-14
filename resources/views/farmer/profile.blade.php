@@ -12,11 +12,11 @@
 <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-    <div class="w-64 bg-green-800 text-white p-6 shadow-xl">
+    <div class="w-64 bg-green-900 text-white p-6 fixed h-full shadow-2xl">
 
-        <h2 class="text-3xl font-bold mb-10">
+        <h1 class="text-4xl font-extrabold mb-10 leading-tight">
             🌾 Farmer Panel
-        </h2>
+        </h1>
 
         <ul class="space-y-3">
 
@@ -30,9 +30,23 @@
 
             <!-- Products -->
             <li>
-                <a href="{{ route('products.index') }}"
+                <a href="{{ route('farmer-products.index') }}"
                    class="block hover:bg-green-700 px-4 py-3 rounded-xl transition">
                     My Products
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('harvest-records.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                    Harvest Records
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('reports.index') }}"
+                class="block hover:bg-green-700 px-4 py-3 rounded-2xl transition">
+                    Reports
                 </a>
             </li>
 
@@ -59,7 +73,7 @@
                     @csrf
 
                     <button
-                        class="w-full text-left hover:bg-red-600 px-4 py-3 rounded-xl transition">
+                        class="w-full text-left bg-red-500 hover:bg-red-600 px-4 py-3 rounded-2xl transition font-semibold">
                         Logout
                     </button>
 
@@ -72,7 +86,7 @@
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="flex-1 p-8">
+    <div class="flex-1 ml-64 p-10">
 
         <!-- HEADER -->
         <div class="flex justify-between items-center mb-8">

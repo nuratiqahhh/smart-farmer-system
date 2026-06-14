@@ -86,13 +86,22 @@
 
     <div class="flex-1 ml-64 p-10">
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-start mb-8">
 
-        <h1 class="text-4xl font-bold">
-            Harvest Records
-        </h1>
+        <div>
+
+            <h1 class="text-5xl font-extrabold text-gray-800">
+                Harvest Records
+            </h1>
+
+            <p class="text-gray-500 text-lg mt-2">
+                Monitor and manage all harvest activities.
+            </p>
+
+        </div>
 
         <div class="flex gap-3">
+
 
             <a href="{{ route('farmer.dashboard') }}"
             class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
@@ -120,7 +129,47 @@
 
     @endif
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="grid grid-cols-3 gap-6 mb-8">
+
+        <div class="bg-green-500 text-white p-6 rounded-2xl shadow">
+
+            <h3>Total Records</h3>
+
+            <p class="text-3xl font-bold">
+                {{ $records->count() }}
+            </p>
+
+        </div>
+
+        <div class="bg-blue-500 text-white p-6 rounded-2xl shadow">
+
+            <h3>Total Harvest Quantity</h3>
+
+            <p class="text-3xl font-bold">
+                {{ $records->sum('harvest_quantity') }}
+            </p>
+
+        </div>
+
+        <div class="bg-purple-500 text-white p-6 rounded-2xl shadow">
+
+            <h3>Latest Harvest</h3>
+
+            <p class="text-3xl font-bold">
+
+                @if($records->count())
+                    {{ \Carbon\Carbon::parse($records->first()->harvest_date)->format('d M') }}
+                @else
+                    -
+                @endif
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
 
         <table class="w-full">
 
@@ -156,7 +205,7 @@
 
                         </td>
 
-                        <td class="p-3">
+                        <td class="p-3 font-bold text-green-600">
                             {{ $record->harvest_quantity }}
                         </td>
 

@@ -35,7 +35,7 @@
         <!-- PHONE -->
         <input type="text"
             name="phone"
-            value="{{ old('phone') }}"
+            value="{{ old('phone', auth()->user()->phone) }}"
             placeholder="Phone Number"
             class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             required>
@@ -46,19 +46,47 @@
             </p>
         @enderror
 
-        <!-- ADDRESS -->
-        <textarea
-            name="address"
-            placeholder="Address"
-            rows="4"
-            class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            required>{{ old('address') }}</textarea>
+       <div id="addressSection">
 
-        @error('address')
-            <p class="text-red-500 text-sm mb-5 mt-1">
-                {{ $message }}
-            </p>
-        @enderror
+            <label class="block text-gray-700 font-semibold mb-2 mt-4">
+                Delivery Address
+            </label>
+
+            <button
+                type="button"
+                id="currentLocationBtn"
+                class="mb-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
+                📍 Use Current Location
+
+            </button>
+
+            <input
+                type="text"
+                id="addressSearch"
+                placeholder="Search area, postcode or city (Malaysia)"
+                class="w-full border border-gray-300 p-4 rounded-lg mb-2">
+
+            <div
+                id="suggestions"
+                class="bg-white border rounded-lg shadow hidden mb-3">
+            </div>
+
+            <textarea
+                id="address"
+                name="address"
+                placeholder="Use Current Location or Search Address"
+                rows="4"
+                class="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('address', auth()->user()->address) }}</textarea>
+
+            @error('address')
+                <p class="text-red-500 text-sm mb-5 mt-1">
+                    {{ $message }}
+
+                </p>
+            @enderror
+
+        </div>
 
         <!-- DELIVERY METHOD -->
         <label class="block text-gray-700 font-semibold mb-2">
@@ -272,6 +300,137 @@ deliveryRadio.addEventListener(
 );
 
 updateTotal();
+
+const addressSection =
+document.getElementById("addressSection");
+
+const searchBox =
+document.getElementById("addressSearch");
+
+const suggestionBox =
+document.getElementById("suggestions");
+
+const addressField =
+document.getElementById("address");
+
+function toggleAddress(){
+
+    if(deliveryRadio.checked){
+
+        addressSection.style.display = "block";
+
+        addressField.required = true;
+
+    } else {
+
+        addressSection.style.display = "none";
+
+        addressField.required = false;
+    }
+}
+
+pickupRadio.addEventListener(
+    "change",
+    toggleAddress
+);
+
+deliveryRadio.addEventListener(
+    "change",
+    toggleAddress
+);
+
+toggleAddress();
+
+searchBox.addEventListener("keyup", async function(){
+
+    let keyword = this.value;
+
+    if(keyword.length < 3){
+
+        suggestionBox.classList.add("hidden");
+        return;
+    }
+
+    const response = await fetch(
+        "https://nominatim.openstreetmap.org/search?format=json&countrycodes=my&addressdetails=1&q="
+        + encodeURIComponent(keyword)
+    );
+
+    const data = await response.json();
+
+    suggestionBox.innerHTML = "";
+
+    data.slice(0,5).forEach(place => {
+
+        const item =
+        document.createElement("div");
+
+        item.className =
+        "p-3 border-b hover:bg-gray-100 cursor-pointer";
+
+        item.innerText =
+        place.display_name;
+
+        item.onclick = function(){
+
+            addressField.value =
+            place.display_name;
+
+            searchBox.value =
+            place.display_name;
+
+            suggestionBox.classList.add("hidden");
+        };
+
+        suggestionBox.appendChild(item);
+
+    });
+
+    suggestionBox.classList.remove("hidden");
+
+});
+
+document
+.getElementById("currentLocationBtn")
+.addEventListener("click", function(){
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function(position){
+
+            let lat =
+            position.coords.latitude;
+
+            let lon =
+            position.coords.longitude;
+
+            const response =
+            await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+            );
+
+            const data =
+            await response.json();
+
+            addressField.value =
+            data.display_name;
+
+            searchBox.value =
+            data.display_name;
+
+        },
+
+        function(){
+
+            alert(
+                "Unable to get current location."
+            );
+
+        }
+
+    );
+
+});
 
 </script>
 
