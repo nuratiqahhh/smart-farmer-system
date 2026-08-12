@@ -19,7 +19,7 @@
     <div class="w-64 bg-green-900 text-white p-6 fixed h-full shadow-2xl">
 
         <h1 class="text-4xl font-extrabold mb-10 leading-tight">
-            🌾 Farmer Panel
+            Farmer Panel
         </h1>
 
         <ul class="space-y-4">
@@ -195,6 +195,104 @@
 
         </div>
 
+        @if(count($recommendations) > 0)
+
+        <div class="bg-white rounded-3xl shadow-lg p-8 mt-8 mb-8 border-l-8 border-yellow-500">
+
+            <h2 class="text-2xl font-bold text-yellow-600 mb-6">
+                📈 Smart Inventory Recommendation
+            </h2>
+
+            <div class="space-y-6">
+
+                @foreach($recommendations as $recommendation)
+
+                    <div class="border rounded-2xl p-6 bg-gray-50">
+
+                        <div class="grid md:grid-cols-2 gap-6">
+
+                            <div>
+
+                                <p class="text-gray-500">
+                                    Recommended Product
+                                </p>
+
+                                <h3 class="text-3xl font-bold text-green-700">
+                                    {{ $recommendation['product'] }}
+                                </h3>
+
+                                <div class="mt-4 space-y-2">
+
+                                    <p>
+                                        📦 Current Stock :
+                                        <strong>{{ $recommendation['stock'] }}</strong>
+                                    </p>
+
+                                    <p>
+                                        📈 Average Sold :
+                                        <strong>{{ $recommendation['average'] }}</strong>
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="bg-yellow-50 rounded-2xl p-5">
+
+                                <h3 class="font-bold text-lg text-yellow-700 mb-3">
+                                    Recommendation
+                                </h3>
+
+                                <p class="mb-3">
+                                    {{ $recommendation['message'] }}
+                                </p>
+
+                                <p>
+                                    Recommended Harvest :
+                                    <strong class="text-red-600">
+                                        {{ $recommendation['suggest'] }}
+                                    </strong>
+                                    units
+                                </p>
+
+                                <div class="mt-4">
+
+                                    @if($recommendation['priority'] == 'HIGH')
+
+                                        <span class="bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+                                            🔴 HIGH
+                                        </span>
+
+                                    @elseif($recommendation['priority'] == 'MEDIUM')
+
+                                        <span class="bg-yellow-500 text-white px-4 py-2 rounded-full font-bold">
+                                            🟡 MEDIUM
+                                        </span>
+
+                                    @else
+
+                                        <span class="bg-green-600 text-white px-4 py-2 rounded-full font-bold">
+                                            🟢 LOW
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+        @endif
+
         <!-- ANALYTICS -->
         <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
 
@@ -202,7 +300,7 @@
 
                 <div>
                     <h2 class="text-3xl font-bold text-gray-800">
-                        📊 Weekly Sales Analytics
+                        Weekly Sales Analytics
                     </h2>
 
                     <p class="text-gray-500 mt-2">
@@ -229,7 +327,7 @@
 
                 <div>
                     <h2 class="text-3xl font-bold text-gray-800 mb-4">
-                        🏆 Top Selling Product
+                        Top Selling Product
                     </h2>
 
                     <h3 class="text-4xl font-extrabold text-green-600">

@@ -155,9 +155,6 @@ class ProductController extends Controller
         |--------------------------------------------------------------------------
         | FIFO PRODUCT DISPLAY
         |--------------------------------------------------------------------------
-        | Product sama akan ikut stock farmer yang upload dulu
-        | sebab order ikut created_at oldest first
-        |--------------------------------------------------------------------------
         */
 
         $products = Product::query()
@@ -183,5 +180,29 @@ if (auth()->check()) {
 }
 
         return view('shop.index', compact('products', 'cartCount'));
+    }
+
+    /**
+     * Display product details
+     */
+    public function show(Product $product)
+    {
+        $relatedProducts = Product::where('category', $product->category)
+            ->where('id', '!=', $product->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        $cartCount = 0;
+
+        if (auth()->check()) {
+            $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+        }
+
+        return view('shop.show', compact(
+            'product',
+            'relatedProducts',
+            'cartCount'
+        ));
     }
 }

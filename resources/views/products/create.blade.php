@@ -19,7 +19,7 @@
         <div class="mb-10">
 
             <h1 class="text-3xl font-extrabold leading-tight">
-                🌾 Farmer Panel
+                Farmer Panel
             </h1>
 
         </div>

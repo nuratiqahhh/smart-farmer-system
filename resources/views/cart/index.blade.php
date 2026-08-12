@@ -134,7 +134,7 @@
 
             <h2 class="text-2xl font-bold text-gray-800 mb-6">
 
-                📋 Order Summary
+                Order Summary
 
             </h2>
 

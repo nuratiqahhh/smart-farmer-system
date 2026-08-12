@@ -99,6 +99,63 @@ class FarmerController extends Controller
             }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | SMART INVENTORY RECOMMENDATION
+        |--------------------------------------------------------------------------
+        */
+
+        $recommendations = [];
+
+        foreach ($productIds as $productId) {
+
+            $product = Product::find($productId);
+
+            if (!$product) {
+                continue;
+            }
+
+            $averageSold = Order::where('product_id', $product->id)
+                ->avg('quantity');
+
+            $averageSold = round($averageSold);
+
+            if ($averageSold < 1) {
+                $averageSold = 1;
+            }
+
+            $stock = $product->quantity;
+
+            if ($stock <= ($averageSold * 2)) {
+
+                $priority = 'HIGH';
+                $message = 'Harvest immediately to avoid stock shortage.';
+
+            } elseif ($stock <= ($averageSold * 5)) {
+
+                $priority = 'MEDIUM';
+                $message = 'Prepare the next harvest soon.';
+
+            } else {
+
+                $priority = 'LOW';
+                $message = 'Current stock is sufficient.';
+
+            }
+
+            $recommendations[] = [
+
+                'product' => $product->name,
+                'stock' => $stock,
+                'average' => $averageSold,
+                'suggest' => $averageSold * 5,
+                'priority' => $priority,
+                'message' => $message,
+
+            ];
+
+        }
+
         $salesData = [];
 
         for ($i = 6; $i >= 0; $i--) {
@@ -120,7 +177,8 @@ class FarmerController extends Controller
             'averageOrder',
             'topProductName',
             'topProductSold',
-            'salesData'
+            'salesData',
+            'recommendations'
         ));
     }
 }

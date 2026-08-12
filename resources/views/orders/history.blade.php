@@ -15,7 +15,7 @@
 
         <!-- Logo -->
         <h1 class="text-2xl font-bold">
-            🌾 Smart Farmer
+            Smart Farmer
         </h1>
 
         <!-- Menu -->

@@ -15,7 +15,7 @@
     <div class="w-64 bg-green-900 text-white p-6 fixed h-full shadow-2xl">
 
         <h1 class="text-4xl font-extrabold mb-10 leading-tight">
-            🌾 Farmer Panel
+            Farmer Panel
         </h1>
 
         <ul class="space-y-3">

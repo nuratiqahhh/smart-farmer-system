@@ -18,18 +18,18 @@
         <!-- LOGO -->
         <div>
 
-            <h1 class="text-3xl font-extrabold tracking-wide">
-                🌾 Smart Farmer
+            <h1 class="text-3xl font-bold tracking-tight">
+                Smart<span class="text-green-300">Farmer</span>
             </h1>
 
         </div>
 
         <!-- MENU -->
-        <div class="flex items-center gap-6 text-base font-semibold">
+        <div class="flex items-center gap-8 text-sm font-medium">
 
             <!-- Shop -->
             <a href="/shop"
-               class="hover:text-green-200 transition">
+               class="hover:text-green-300 transition duration-200">
                 Shop
             </a>
 
@@ -37,7 +37,7 @@
             <a href="/cart"
             class="hover:text-green-200 transition flex items-center gap-2">
 
-                🛒 My Cart
+                My Cart
 
                 @if(isset($cartCount) && $cartCount > 0)
 
@@ -54,7 +54,7 @@
 
             <!-- Orders -->
             <a href="/my-orders"
-               class="hover:text-green-200 transition">
+               class="hover:text-green-300 transition duration-200">
                 My Orders
             </a>
 
@@ -84,19 +84,19 @@
 
         <h1 class="text-5xl md:text-6xl font-extrabold mb-4">
 
-            🌱 Farm Fresh Marketplace
+            Smart Local Farmer Marketplace
 
         </h1>
 
         <p class="text-xl text-green-100">
 
-            Fresh vegetables and fruits from trusted local farmers.
+            Fresh vegetables and fruits directly from trusted local farmers.
 
         </p>
 
         <p class="mt-4 text-green-200">
 
-            Premium Quality • Fresh Harvest • Direct From Farmers
+            Inventory Management • Fresh Harvest • Direct Farmer Sales
 
         </p>
 
@@ -213,19 +213,36 @@
 
                 </h3>
 
+                <!-- PRICE -->
+                <div class="mt-auto mb-6">
+
+                    <span class="text-4xl font-extrabold text-green-600">
+
+                        RM {{ number_format($product->price, 2) }}
+
+                    </span>
+
+                    <span class="text-gray-500 font-medium">
+
+                        per {{ $product->unit }}
+
+                    </span>
+
+                </div>
+
                 <!-- GRADE -->
                 <div class="mb-4">
 
                     @if($product->grade == 'A')
 
-                        <span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-                            🌟 Grade A
+                        <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+                            Grade A
                         </span>
 
                     @else
 
-                        <span class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-                            🌟 Grade B
+                        <span class="bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-semibold">
+                            Grade B
                         </span>
 
                     @endif
@@ -235,24 +252,20 @@
                 <!-- STOCK -->
                 <div class="mb-4">
 
-                    <p class="text-gray-600 text-lg">
+                    <p class="text-gray-500 text-sm">
+                        Available Stock
+                    </p>
 
-                        Available Stock:
-                        <span class="font-bold text-gray-800">
-
-                            {{ $product->quantity }}
-                            {{ $product->unit }}
-
-                        </span>
-
+                    <p class="text-2xl font-bold text-gray-900 mb-3">
+                        {{ $product->quantity }} {{ $product->unit }}
                     </p>
 
                     <!-- LOW STOCK -->
                     @if($product->quantity <= 5 && $product->quantity > 0)
 
-                        <p class="text-red-500 font-semibold mt-2">
-                            ⚠ Low Stock
-                        </p>
+                        <div class="bg-red-100 text-red-700 rounded-lg px-3 py-2 text-sm font-semibold mt-2 inline-block">
+                            Only {{ $product->quantity }} {{ $product->unit }} left
+                        </div>
 
                     @endif
 
@@ -272,24 +285,6 @@
                         </span>
 
                     </p>
-
-                </div>
-
-
-                <!-- PRICE -->
-                <div class="mt-auto mb-6">
-
-                    <span class="text-4xl font-extrabold text-green-600">
-
-                        RM {{ number_format($product->price, 2) }}
-
-                    </span>
-
-                    <span class="text-gray-500 font-medium">
-
-                        per {{ $product->unit }}
-
-                    </span>
 
                 </div>
 
@@ -340,14 +335,28 @@
                         value="1"
                         min="1"
                         max="{{ $product->quantity }}"
+                        {{ $product->quantity == 0 ? 'disabled' : '' }}
                         class="w-full border border-gray-300 rounded-xl p-3 mb-4">
 
-                    <button type="submit"
-                        class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-bold text-lg transition shadow-lg">
+                    @if($product->quantity > 0)
 
-                        🛒 Add to Cart
+                        <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-bold text-lg transition shadow-lg">
 
-                    </button>
+                            Add to Cart
+
+                        </button>
+
+                    @else
+
+                        <button disabled
+                            class="w-full bg-gray-400 text-white py-4 rounded-2xl font-bold cursor-not-allowed">
+
+                            Out of Stock
+
+                        </button>
+
+                    @endif
 
                 </form>
 

@@ -14,7 +14,7 @@
 
         <div class="mb-10">
             <h1 class="text-3xl font-extrabold">
-                🌾 Farmer Panel
+                Farmer Panel
             </h1>
         </div>
 
@@ -189,16 +189,28 @@
                                         Paid
                                     </span>
 
-                                @elseif($order->status == 'Completed')
-
-                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                                        Completed
-                                    </span>
-
-                                @else
+                                @elseif($order->status == 'Preparing')
 
                                     <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                                        Pending
+                                        Preparing
+                                    </span>
+
+                                @elseif($order->status == 'Ready for Pickup')
+
+                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                        Ready for Pickup
+                                    </span>
+
+                                @elseif($order->status == 'Out for Delivery')
+
+                                    <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+                                        Out for Delivery
+                                    </span>
+
+                                @elseif($order->status == 'Completed')
+
+                                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
+                                        Completed
                                     </span>
 
                                 @endif
@@ -208,18 +220,40 @@
                             <!-- ACTION -->
                             <td class="p-4">
 
-                                @if($order->status == 'Paid')
+                                @if($order->status != 'Completed')
 
-                                    <form action="{{ route('orders.complete', $order->id) }}"
-                                        method="POST">
+                                    <form action="{{ route('orders.complete', $order->id) }}" method="POST">
 
                                         @csrf
                                         @method('PUT')
 
-                                        <button
-                                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
 
-                                            Complete
+                                            @if($order->status == 'Paid')
+
+                                                Start Preparing
+
+                                            @elseif($order->status == 'Preparing')
+
+                                                @if($order->delivery_method == 'pickup')
+
+                                                    Mark Ready
+
+                                                @else
+
+                                                    Start Delivery
+
+                                                @endif
+
+                                            @elseif($order->status == 'Ready for Pickup')
+
+                                                Complete Order
+
+                                            @elseif($order->status == 'Out for Delivery')
+
+                                                Complete Delivery
+
+                                            @endif
 
                                         </button>
 
@@ -227,8 +261,8 @@
 
                                 @else
 
-                                    <span class="text-gray-400">
-                                        -
+                                    <span class="text-green-600 font-semibold">
+                                        ✔ Completed
                                     </span>
 
                                 @endif

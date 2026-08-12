@@ -8,7 +8,7 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
-    // 🔥 ADD TO CART
+    // ADD TO CART
     public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -38,7 +38,7 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Added to cart!');
     }
 
-    // 🔥 VIEW CART
+    // VIEW CART
     public function index()
     {
         $carts = Cart::with('product')
@@ -48,7 +48,7 @@ class CartController extends Controller
         return view('cart.index', compact('carts'));
     }
 
-    // 🔥 REMOVE ITEM
+    // REMOVE ITEM
     public function remove($id)
     {
         Cart::findOrFail($id)->delete();

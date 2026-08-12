@@ -110,12 +110,33 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'Completed';
+        if ($order->status == 'Paid') {
+
+            $order->status = 'Preparing';
+
+        } elseif ($order->status == 'Preparing') {
+
+            if ($order->delivery_method == 'pickup') {
+
+                $order->status = 'Ready for Pickup';
+
+            } else {
+
+                $order->status = 'Out for Delivery';
+
+            }
+
+        } elseif (
+            $order->status == 'Ready for Pickup' ||
+            $order->status == 'Out for Delivery'
+        ) {
+
+            $order->status = 'Completed';
+
+        }
 
         $order->save();
 
-        return redirect()
-            ->back()
-            ->with('success', 'Order marked as completed!');
+        return back()->with('success', 'Order status updated!');
     }
 }

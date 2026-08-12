@@ -19,17 +19,13 @@ class CheckoutController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-        // calculate total
         $subtotal = 0;
 
         foreach ($carts as $cart) {
-
             $subtotal += $cart->product->price * $cart->quantity;
-
         }
 
         $serviceCharge = 1.00;
-
         $total = $subtotal + $serviceCharge;
 
         return view(
@@ -48,7 +44,6 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        // validation
         $request->validate([
 
             'fullname' => 'required|min:3|max:100',
@@ -81,97 +76,110 @@ class CheckoutController extends Controller
 
         ]);
 
-        // get cart items
+        // Get cart items
         $carts = Cart::with('product')
             ->where('user_id', auth()->id())
             ->get();
 
-        // save orders
         foreach ($carts as $cart) {
 
-            // find product
             $product = Product::find($cart->product_id);
 
-            // PREVENT NEGATIVE STOCK 🔥
-            if ($product && $product->quantity >= $cart->quantity) {
+            // Product tidak wujud
+            if (!$product) {
 
-                // reduce stock
-                $product->quantity =
-                    $product->quantity - $cart->quantity;
+                return back()->with(
+                    'error',
+                    'Product not found.'
+                );
 
-                $product->save();
+            }
 
-                // SAVE ORDER
-                $productTotal =
-                    $cart->product->price * $cart->quantity;
+            // Stock tidak mencukupi
+            if ($product->quantity < $cart->quantity) {
 
-                $deliveryFee =
-                    $request->delivery_method == 'delivery'
-                        ? 5
-                        : 0;
+                return back()->with(
+                    'error',
+                    'Insufficient stock for ' . $product->name
+                );
 
-                $serviceCharge = 1;
+            }
 
-                $finalTotal =
-                    $productTotal +
-                    $deliveryFee +
-                    $serviceCharge;
-                $order = Order::create([
+            // Tolak stock
+            $product->quantity -= $cart->quantity;
+            $product->save();
 
-                    'buyer_id' => auth()->id(),
+            // Kira jumlah
+            $productTotal = $product->price * $cart->quantity;
 
-                    'product_id' => $cart->product_id,
+            $deliveryFee = $request->delivery_method == 'delivery'
+                ? 5
+                : 0;
 
-                    'quantity' => $cart->quantity,
+            $serviceCharge = 1;
 
-                    'total_price' => $finalTotal,
+            $finalTotal =
+                $productTotal +
+                $deliveryFee +
+                $serviceCharge;
 
-                    'status' => 'Paid',
+            // Simpan Order
+            $order = Order::create([
 
-                    'delivery_method' => $request->delivery_method,
+                'buyer_id' => auth()->id(),
 
-                    'fullname' => $request->fullname,
+                'product_id' => $cart->product_id,
 
-                    'phone' => $request->phone,
+                'quantity' => $cart->quantity,
 
-                    'address' => $request->address,
+                'total_price' => $finalTotal,
 
-                    'payment_method' => $request->payment_method,
+                'status' => 'Paid',
+
+                'delivery_method' => $request->delivery_method,
+
+                'fullname' => $request->fullname,
+
+                'phone' => $request->phone,
+
+                'address' => $request->address,
+
+                'payment_method' => $request->payment_method,
+
+            ]);
+
+            // Simpan Payment
+            Payment::create([
+
+                'order_id' => $order->id,
+
+                'amount' => $order->total_price,
+
+                'payment_method' => $request->payment_method,
+
+                'payment_status' => 'Paid',
+
+                'payment_date' => now(),
+
+            ]);
+
+            // Update alamat buyer jika Delivery
+            if ($request->delivery_method == 'delivery') {
+
+                auth()->user()->update([
+
+                    'address' => $request->address
 
                 ]);
-
-                Payment::create([
-
-                    'order_id' => $order->id,
-
-                    'amount' => $order->total_price,
-
-                    'payment_method' => $request->payment_method,
-
-                    'payment_status' => 'Paid',
-
-                    'payment_date' => now(),
-
-                ]);
-
-                if($request->delivery_method == 'delivery'){
-
-                    auth()->user()->update([
-
-                        'address' => $request->address
-
-                    ]);
-
-                }
 
             }
 
         }
 
-        // clear cart
+        // Clear cart
         Cart::where('user_id', auth()->id())->delete();
 
-        // redirect success page
+        // Redirect success
         return redirect('/payment-success');
     }
 }

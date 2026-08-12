@@ -12,36 +12,42 @@
     <!-- Sidebar -->
     <div class="w-64 bg-green-800 text-white p-6">
 
-        <h2 class="text-2xl font-bold mb-8">
-            👨‍💼 Admin Panel
-        </h2>
+        <div class="mb-10">
+
+            <h1 class="text-5xl font-extrabold leading-tight text-white">
+
+                Admin<br>Panel
+
+            </h1>
+
+        </div>
 
         <ul class="space-y-4">
 
             <li>
                 <a href="{{ route('admin.dashboard') }}"
-                   class="block hover:bg-green-700 p-2 rounded">
+                   class="block px-4 py-3 rounded-2xl hover:bg-green-800 transition">
                     Dashboard
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.products') }}"
-                   class="block hover:bg-green-700 p-2 rounded">
+                   class="block px-4 py-3 rounded-2xl hover:bg-green-800 transition">
                     Products
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.orders') }}"
-                   class="block bg-green-700 p-2 rounded">
+                   class="block px-4 py-3 rounded-2xl bg-green-500 font-semibold">
                     Orders
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.users') }}"
-                   class="block hover:bg-green-700 p-2 rounded">
+                   class="block px-4 py-3 rounded-2xl hover:bg-green-800 transition">
                     Users
                 </a>
             </li>
@@ -54,7 +60,7 @@
                     @csrf
 
                     <button
-                        class="w-full text-left hover:bg-red-600 p-2 rounded">
+                        class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-2xl font-semibold transition">
 
                         Logout
 
