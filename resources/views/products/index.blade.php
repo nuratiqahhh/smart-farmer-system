@@ -132,6 +132,142 @@
 
         @endif
 
+        <!-- SEARCH & FILTER -->
+        <div class="bg-white rounded-2xl shadow-lg p-5 mb-6">
+
+            <form method="GET"
+                action="{{ route('farmer-products.index') }}">
+
+                <!-- SEARCH -->
+                <div class="flex gap-3 mb-4">
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Search product name, category or grade..."
+                        class="flex-1 border border-gray-300 rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    <button
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold">
+
+                        🔍 Search
+
+                    </button>
+
+                    @if(request('search') || request('category') || request('grade') || request('stock'))
+
+                        <a href="{{ route('farmer-products.index') }}"
+                        class="bg-gray-300 hover:bg-gray-400 px-6 py-3 rounded-xl font-semibold">
+
+                            Clear
+
+                        </a>
+
+                    @endif
+
+                </div>
+
+
+                <!-- FILTERS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <!-- CATEGORY -->
+                    <div>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Category
+                        </label>
+
+                        <select
+                            name="category"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                            <option value="">
+                                All Categories
+                            </option>
+
+                            <option value="Fruit"
+                                {{ request('category') == 'Fruit' ? 'selected' : '' }}>
+                                Fruit
+                            </option>
+
+                            <option value="Vegetable"
+                                {{ request('category') == 'Vegetable' ? 'selected' : '' }}>
+                                Vegetable
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- GRADE -->
+                    <div>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Grade
+                        </label>
+
+                        <select
+                            name="grade"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                            <option value="">
+                                All Grades
+                            </option>
+
+                            <option value="A"
+                                {{ request('grade') == 'A' ? 'selected' : '' }}>
+                                Grade A
+                            </option>
+
+                            <option value="B"
+                                {{ request('grade') == 'B' ? 'selected' : '' }}>
+                                Grade B
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- STOCK -->
+                    <div>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Stock Status
+                        </label>
+
+                        <select
+                            name="stock"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                            <option value="">
+                                All Stock
+                            </option>
+
+                            <option value="low"
+                                {{ request('stock') == 'low' ? 'selected' : '' }}>
+                                Low Stock
+                            </option>
+
+                            <option value="available"
+                                {{ request('stock') == 'available' ? 'selected' : '' }}>
+                                Available
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
         <!-- PRODUCT TABLE -->
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
 
@@ -331,6 +467,11 @@
 
                 </table>
 
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="p-6">
+                {{ $products->links() }}
             </div>
 
         </div>

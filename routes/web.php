@@ -131,11 +131,11 @@ Route::middleware(['auth', 'role:farmer'])->group(function () {
 
 Route::middleware(['auth', 'role:farmer'])->group(function () {
 
-    Route::get(
-        '/reports',
-        [ReportController::class, 'index']
-    )->name('reports.index');
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
 
+    Route::get('/reports/products/pdf', [ReportController::class, 'productPdf'])
+        ->name('reports.products.pdf');
 });
 
 /*

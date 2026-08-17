@@ -43,4 +43,21 @@ class ReportController extends Controller
             )
         );
     }
+
+    /**
+     * Generate Product PDF Report
+     */
+    public function productPdf()
+    {
+        $products = \App\Models\Product::with('user')
+            ->latest()
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'reports.products-pdf',
+            compact('products')
+        );
+
+        return $pdf->download('product-report.pdf');
+    }
 }

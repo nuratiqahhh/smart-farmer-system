@@ -84,18 +84,29 @@
 
     <div class="flex-1 ml-64 p-10">
 
-    <div class="flex justify-between mb-6">
+    <div class="flex justify-between items-center mb-6">
 
         <h1 class="text-4xl font-bold">
             Sales Report
         </h1>
 
-        <a href="{{ route('farmer.dashboard') }}"
-           class="bg-gray-500 text-white px-4 py-2 rounded">
+        <div class="flex gap-3">
 
-            Back Dashboard
+            <a href="{{ route('reports.products.pdf') }}"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
 
-        </a>
+                📄 Export Product PDF
+
+            </a>
+
+            <a href="{{ route('farmer.dashboard') }}"
+            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+
+                Back Dashboard
+
+            </a>
+
+        </div>
 
     </div>
 

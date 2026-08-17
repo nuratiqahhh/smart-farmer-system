@@ -100,6 +100,106 @@
 
         </div>
 
+        <!-- SEARCH & FILTER -->
+
+        <div class="bg-white rounded-2xl shadow p-5 mb-6">
+
+            <form method="GET" action="{{ route('admin.orders') }}">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <!-- SEARCH -->
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ $search ?? '' }}"
+                        placeholder="Search customer, phone or product..."
+                        class="border rounded-xl px-4 py-3"
+                    >
+
+                    <!-- STATUS -->
+                    <select
+                        name="status"
+                        class="border rounded-xl px-4 py-3">
+
+                        <option value="">All Status</option>
+
+                        <option value="Paid"
+                            {{ ($status ?? '') == 'Paid' ? 'selected' : '' }}>
+                            Paid
+                        </option>
+
+                        <option value="Preparing"
+                            {{ ($status ?? '') == 'Preparing' ? 'selected' : '' }}>
+                            Preparing
+                        </option>
+
+                        <option value="Ready for Pickup"
+                            {{ ($status ?? '') == 'Ready for Pickup' ? 'selected' : '' }}>
+                            Ready for Pickup
+                        </option>
+
+                        <option value="Out for Delivery"
+                            {{ ($status ?? '') == 'Out for Delivery' ? 'selected' : '' }}>
+                            Out for Delivery
+                        </option>
+
+                        <option value="Completed"
+                            {{ ($status ?? '') == 'Completed' ? 'selected' : '' }}>
+                            Completed
+                        </option>
+
+                    </select>
+
+
+                    <!-- DELIVERY -->
+                    <select
+                        name="delivery"
+                        class="border rounded-xl px-4 py-3">
+
+                        <option value="">All Delivery</option>
+
+                        <option value="delivery"
+                            {{ ($delivery ?? '') == 'delivery' ? 'selected' : '' }}>
+                            Home Delivery
+                        </option>
+
+                        <option value="pickup"
+                            {{ ($delivery ?? '') == 'pickup' ? 'selected' : '' }}>
+                            Self Pickup
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="mt-4 flex gap-3">
+
+                    <button
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl">
+
+                        🔍 Search / Filter
+
+                    </button>
+
+                    <a
+                        href="{{ route('admin.orders') }}"
+                        class="bg-gray-300 hover:bg-gray-400 px-6 py-3 rounded-xl">
+
+                        Clear
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
         <!-- Orders Table -->
         <div class="bg-white rounded-2xl shadow overflow-hidden">
 
@@ -207,6 +307,11 @@
                 </tbody>
 
             </table>
+
+            <!-- PAGINATION -->
+            <div class="p-4 border-t">
+                {{ $orders->withQueryString()->links() }}
+            </div>
 
         </div>
 

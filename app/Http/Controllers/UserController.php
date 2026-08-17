@@ -10,9 +10,24 @@ class UserController extends Controller
     /**
      * ADMIN VIEW USERS
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->get();
+        $search = $request->search;
+
+        $users = User::query()
+
+            ->when($search, function ($query, $search) {
+
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('phone', 'like', '%' . $search . '%')
+                    ->orWhere('role', 'like', '%' . $search . '%');
+
+            })
+
+            ->latest()
+            ->paginate(5)
+            ->withQueryString();
 
         return view('admin.users', compact('users'));
     }

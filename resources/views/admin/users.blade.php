@@ -53,6 +53,43 @@ class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
 
     </div>
 
+    <!-- SEARCH -->
+    <div class="bg-white rounded-xl shadow p-4 mb-4">
+
+        <form method="GET" action="{{ route('admin.users') }}" class="flex gap-3">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Search name, email, phone or role..."
+                class="flex-1 border rounded-lg px-4 py-3">
+
+            <button
+                type="submit"
+                class="bg-green-600 text-white px-6 py-3 rounded-lg">
+
+                🔍 Search
+
+            </button>
+
+            @if(request('search'))
+
+                <a href="{{ route('admin.users') }}"
+                class="bg-gray-300 px-6 py-3 rounded-lg">
+
+                    Clear
+
+                </a>
+
+            @endif
+
+        </form>
+
+    </div>
+
+
+    <!-- TABLE -->
     <div class="bg-white rounded-xl shadow overflow-hidden">
 
         <table class="w-full">
@@ -179,6 +216,11 @@ class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             </tbody>
 
         </table>
+
+        <!-- PAGINATION -->
+        <div class="p-4 border-t">
+            {{ $users->links() }}
+        </div>
 
     </div>
 

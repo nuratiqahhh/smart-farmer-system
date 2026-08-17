@@ -90,6 +90,43 @@
 
         </div>
 
+        <!-- SEARCH -->
+        <div class="bg-white p-5 rounded-2xl shadow mb-6">
+
+            <form method="GET"
+                action="{{ route('admin.products') }}"
+                class="flex gap-3">
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ $search ?? '' }}"
+                    placeholder="Search product name, category or grade..."
+                    class="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                <button
+                    type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold">
+
+                    🔍 Search
+
+                </button>
+
+                @if(!empty($search))
+
+                    <a href="{{ route('admin.products') }}"
+                    class="bg-gray-300 hover:bg-gray-400 px-6 py-3 rounded-xl font-semibold">
+
+                        Clear
+
+                    </a>
+
+                @endif
+
+            </form>
+
+        </div>
+
         <!-- TABLE -->
         <div class="bg-white rounded-xl shadow overflow-hidden">
 
@@ -219,6 +256,10 @@
                 </tbody>
 
             </table>
+
+            <div class="p-4">
+                {{ $products->links() }}
+            </div>
 
         </div>
 

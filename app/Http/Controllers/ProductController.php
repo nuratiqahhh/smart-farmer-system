@@ -10,13 +10,65 @@ class ProductController extends Controller
     /**
      * Display all farmer products
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $search = $request->search;
+        $category = $request->category;
+        $grade = $request->grade;
+        $stock = $request->stock;
 
-        return view('products.index', compact('products'));
+        $products = Product::where('user_id', auth()->id())
+
+            // SEARCH
+            ->when($search, function ($query, $search) {
+
+                $query->where(function ($q) use ($search) {
+
+                    $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('category', 'like', '%' . $search . '%')
+                    ->orWhere('grade', 'like', '%' . $search . '%');
+
+                });
+
+            })
+
+            // CATEGORY FILTER
+            ->when($category, function ($query, $category) {
+
+                $query->where('category', $category);
+
+            })
+
+            // GRADE FILTER
+            ->when($grade, function ($query, $grade) {
+
+                $query->where('grade', $grade);
+
+            })
+
+            // STOCK FILTER
+            ->when($stock === 'low', function ($query) {
+
+                $query->where('quantity', '<=', 5);
+
+            })
+
+            ->when($stock === 'available', function ($query) {
+
+                $query->where('quantity', '>', 5);
+
+            })
+
+            ->latest()
+            ->paginate(5);
+
+        return view('products.index', compact(
+            'products',
+            'search',
+            'category',
+            'grade',
+            'stock'
+        ));
     }
 
     /**
@@ -137,11 +189,25 @@ class ProductController extends Controller
     /**
      * Admin view products
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
-        $products = Product::latest()->get();
+        $search = $request->search;
 
-        return view('admin.products', compact('products'));
+        $products = Product::query()
+            ->when($search, function ($query, $search) {
+
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('category', 'like', '%' . $search . '%')
+                    ->orWhere('grade', 'like', '%' . $search . '%');
+
+            })
+            ->latest()
+            ->paginate(5);
+
+        return view('admin.products', compact(
+            'products',
+            'search'
+        ));
     }
 
     /**

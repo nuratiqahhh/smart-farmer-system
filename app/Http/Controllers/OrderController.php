@@ -25,13 +25,54 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
-    public function adminOrders()
+    public function adminOrders(Request $request)
     {
-        $orders = Order::with(['product', 'buyer'])
-            ->latest()
-            ->get();
+        $search = $request->search;
+        $status = $request->status;
+        $delivery = $request->delivery;
 
-        return view('admin.orders', compact('orders'));
+        $orders = Order::with(['product', 'buyer'])
+
+            // Search customer / product
+            ->when($search, function ($query, $search) {
+
+                $query->where(function ($q) use ($search) {
+
+                    $q->where('fullname', 'like', '%' . $search . '%')
+                    ->orWhere('phone', 'like', '%' . $search . '%')
+                    ->orWhereHas('product', function ($productQuery) use ($search) {
+
+                        $productQuery->where('name', 'like', '%' . $search . '%');
+
+                    });
+
+                });
+
+            })
+
+            // Filter status
+            ->when($status, function ($query, $status) {
+
+                $query->where('status', $status);
+
+            })
+
+            // Filter delivery
+            ->when($delivery, function ($query, $delivery) {
+
+                $query->where('delivery_method', $delivery);
+
+            })
+
+            ->latest()
+            ->paginate(5);
+
+        return view('admin.orders', compact(
+            'orders',
+            'search',
+            'status',
+            'delivery'
+        ));
     }
 
     /**

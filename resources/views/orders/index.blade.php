@@ -183,35 +183,59 @@
                             <!-- STATUS -->
                             <td class="p-4">
 
-                                @if($order->status == 'Paid')
+                                @if($order->delivery_method == 'pickup')
 
-                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                        Paid
-                                    </span>
+                                    <!-- PICKUP TIMELINE -->
 
-                                @elseif($order->status == 'Preparing')
+                                    <div class="space-y-2 text-sm">
 
-                                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                                        Preparing
-                                    </span>
+                                        <div class="{{ in_array($order->status, ['Paid','Preparing','Ready for Pickup','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            ✓ Paid
+                                        </div>
 
-                                @elseif($order->status == 'Ready for Pickup')
+                                        <div class="{{ in_array($order->status, ['Preparing','Ready for Pickup','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ in_array($order->status, ['Preparing','Ready for Pickup','Completed']) ? '✓' : '○' }}
+                                            Preparing
+                                        </div>
 
-                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                                        Ready for Pickup
-                                    </span>
+                                        <div class="{{ in_array($order->status, ['Ready for Pickup','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ in_array($order->status, ['Ready for Pickup','Completed']) ? '✓' : '○' }}
+                                            Ready for Pickup
+                                        </div>
 
-                                @elseif($order->status == 'Out for Delivery')
+                                        <div class="{{ $order->status == 'Completed' ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ $order->status == 'Completed' ? '✓' : '○' }}
+                                            Completed
+                                        </div>
 
-                                    <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
-                                        Out for Delivery
-                                    </span>
+                                    </div>
 
-                                @elseif($order->status == 'Completed')
+                                @else
 
-                                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                                        Completed
-                                    </span>
+                                    <!-- DELIVERY TIMELINE -->
+
+                                    <div class="space-y-2 text-sm">
+
+                                        <div class="{{ in_array($order->status, ['Paid','Preparing','Out for Delivery','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            ✓ Paid
+                                        </div>
+
+                                        <div class="{{ in_array($order->status, ['Preparing','Out for Delivery','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ in_array($order->status, ['Preparing','Out for Delivery','Completed']) ? '✓' : '○' }}
+                                            Preparing
+                                        </div>
+
+                                        <div class="{{ in_array($order->status, ['Out for Delivery','Completed']) ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ in_array($order->status, ['Out for Delivery','Completed']) ? '✓' : '○' }}
+                                            Out for Delivery
+                                        </div>
+
+                                        <div class="{{ $order->status == 'Completed' ? 'text-green-600 font-semibold' : 'text-gray-400' }}">
+                                            {{ $order->status == 'Completed' ? '✓' : '○' }}
+                                            Completed
+                                        </div>
+
+                                    </div>
 
                                 @endif
 
